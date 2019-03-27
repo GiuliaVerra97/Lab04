@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import it.polito.tdp.lab04.DAO.CorsoDAO;
 import it.polito.tdp.lab04.model.Corso;
 import it.polito.tdp.lab04.model.Model;
+import it.polito.tdp.lab04.model.Studente;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -68,6 +69,19 @@ public class SegreteriaStudentiController {
     @FXML
     void doCheck(ActionEvent event) {
 
+    	txtNome.clear();
+    	txtcognome.clear();
+    	txtArea.clear();
+    	
+    	String matricolaDaCercare=txtMatricola.getText();
+    	int m= Integer.parseInt(matricolaDaCercare);
+    	Studente s=model.cercaStudente(m);
+    	if(s!=null) {
+    	txtNome.appendText(s.getNome());
+    	txtcognome.appendText(s.getCognome());
+    	}else {
+    		txtArea.appendText("Studente non trovato");
+    	}
     }
 
     @FXML

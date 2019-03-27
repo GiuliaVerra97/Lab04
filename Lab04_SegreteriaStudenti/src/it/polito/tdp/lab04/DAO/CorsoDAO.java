@@ -43,6 +43,7 @@ public class CorsoDAO {
 				
 			}
 
+			conn.close();
 			return corsi;
 
 		} catch (SQLException e) {
