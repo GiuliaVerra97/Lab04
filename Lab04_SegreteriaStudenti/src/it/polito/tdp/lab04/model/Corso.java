@@ -4,10 +4,10 @@ public class Corso {
 
 	
 
-	private String codins;
+	private String codins;		//codice insegnamento
 	private String nomeCorso;
 	private int crediti;
-	private int pd;
+	private int pd;		//periodo didattico
 	
 	public Corso(String codins,int crediti, String nomeCorso,  int pd) {
 		super();
@@ -63,6 +63,10 @@ public class Corso {
 		} else if (!codins.equals(other.codins))
 			return false;
 		return true;
+	}
+	@Override
+	public String toString() {
+		return String.format("Corso [codins=%s, nomeCorso=%s, crediti=%s, pd=%s]", codins, nomeCorso, crediti, pd);
 	}
 	
 	

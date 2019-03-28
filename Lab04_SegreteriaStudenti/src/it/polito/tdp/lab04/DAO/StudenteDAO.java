@@ -12,7 +12,10 @@ import it.polito.tdp.lab04.model.Studente;
 
 public class StudenteDAO {
 
-	
+	/**
+	 * ottengo dal db tutti gli studenti presenti
+	 * @return lista della classe {@link Studente}
+	 */
 	public List<Studente> getTuttiStudenti() {
 
 		final String sql = "SELECT * FROM studente";
@@ -34,18 +37,15 @@ public class StudenteDAO {
 
 				System.out.println(matricola + " " + nomeStudente + " " + cognomeStudente + " " + cds);
 
-				// Crea un nuovo JAVA Bean Corso
-				// Aggiungi il nuovo oggetto Corso alla lista corsi
 				Studente s=new Studente(matricola, nomeStudente, cognomeStudente, cds );
 				studenti.add(s);
 				
 			}
 
-			conn.close();
+			//conn.close(); andrebbe messo ma da errore perchè manca una parte nel connectDB
 			return studenti;
 
 		} catch (SQLException e) {
-			// e.printStackTrace();
 			throw new RuntimeException("Errore Db");
 		}
 	}

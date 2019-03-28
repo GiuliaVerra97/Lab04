@@ -1,6 +1,7 @@
 package it.polito.tdp.lab04.controller;
 
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -34,7 +35,7 @@ public class SegreteriaStudentiController {
     private TextField txtMatricola;
 
     @FXML
-    private CheckBox check;
+    private Button check;
 
     @FXML
     private TextField txtNome;
@@ -57,13 +58,25 @@ public class SegreteriaStudentiController {
     private Model model;
 
     @FXML
-    void btnCercaCorsi(ActionEvent event) {
-
+    void doCercaCorsi(ActionEvent event) {    	
     }
 
     @FXML
     void doCercaIscritti(ActionEvent event) {
-
+    	txtArea.clear();
+    	if(menuTendinaCorso.getValue()!=null) {
+    		String corsoScelto=menuTendinaCorso.getValue();
+    		List<Studente> listaStudentiIscritti=new LinkedList<Studente>();
+    		Corso c=model.verificaCorsoMenuTendina(corsoScelto);
+    		if(c!=null) {
+    			listaStudentiIscritti=model.getStudentiIscrittiAlCorso(c);
+    			for(Studente s: listaStudentiIscritti) {
+    				txtArea.appendText(" "+ s.getMatricola()+" "+s.getNome()+" "+s.getCognome()+" "+s.getCds()+"\n");
+    			}
+    		}
+    	}else{
+    		txtArea.appendText("Errore nella selezione del corso");
+    	}
     }
 
     @FXML
@@ -74,14 +87,24 @@ public class SegreteriaStudentiController {
     	txtArea.clear();
     	
     	String matricolaDaCercare=txtMatricola.getText();
-    	int m= Integer.parseInt(matricolaDaCercare);
+    	
+    	
+    	int m;
+    	try {
+    	 m= Integer.parseInt(matricolaDaCercare);
+    	}catch(NumberFormatException e) {
+    		txtArea.appendText("Come numero di matricola bisogna scrivere un intero");
+    		return;
+    	}
+    	
     	Studente s=model.cercaStudente(m);
     	if(s!=null) {
-    	txtNome.appendText(s.getNome());
-    	txtcognome.appendText(s.getCognome());
+    		txtNome.appendText(s.getNome());
+    		txtcognome.appendText(s.getCognome());
     	}else {
     		txtArea.appendText("Studente non trovato");
     	}
+    	
     }
 
     @FXML
@@ -91,7 +114,7 @@ public class SegreteriaStudentiController {
 
     @FXML
     void doMenuScegliCorsi(ActionEvent event) {
-
+    	this.setMenuTendinaCorso(this.menuTendinaCorso);
     }
 
     @FXML
@@ -118,11 +141,25 @@ public class SegreteriaStudentiController {
 	    	this.model=m;
 	    	
 	    	for(Corso c: model.getTuttiICorsi()){
-	    		menuTendinaCorso.getItems().add(c.getNomeCorso());		
+	    		menuTendinaCorso.getItems().add(c.getNomeCorso());				//inserisco nel menu tendina tutti i valori
 	    	}
 	    	
-	    	menuTendinaCorso.getItems().add("");
-	    	
-	    
+	    	menuTendinaCorso.getItems().add("");		//aggiungo una riga vuota all'interno del menuTendina
 	}
+
+	
+	
+	
+	public ComboBox<String> getMenuTendinaCorso() {
+		return menuTendinaCorso;
+	}
+
+	public void setMenuTendinaCorso(ComboBox<String> menuTendinaCorso) {
+		this.menuTendinaCorso = menuTendinaCorso;
+	}
+	
+	
+	
+	
+	
 }

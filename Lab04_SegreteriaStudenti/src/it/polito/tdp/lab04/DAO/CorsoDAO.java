@@ -8,12 +8,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 import it.polito.tdp.lab04.model.Corso;
+import it.polito.tdp.lab04.model.Model;
 import it.polito.tdp.lab04.model.Studente;
 
 public class CorsoDAO {
-
-	/*
-	 * Ottengo tutti i corsi salvati nel Db
+	
+	private List<Studente> listaStudentiIscritti=new LinkedList<Studente>();
+	private Model model=new Model();
+ 	StudenteDAO stud = new StudenteDAO();
+ 	
+ 	
+	/**
+	 * Ottengo tutti i corsi salvati nel DB
+	 * return lista della classe {@link Corso}
 	 */
 	public List<Corso> getTuttiICorsi() {
 
@@ -35,43 +42,81 @@ public class CorsoDAO {
 				int periodoDidattico = rs.getInt("pd");
 
 				System.out.println(codins + " " + numeroCrediti + " " + nome + " " + periodoDidattico);
-
-				// Crea un nuovo JAVA Bean Corso
-				// Aggiungi il nuovo oggetto Corso alla lista corsi
 				Corso c=new Corso(codins, numeroCrediti, nome, periodoDidattico);
 				corsi.add(c);
 				
 			}
 
-			conn.close();
+			//conn.close(); andrebbe messo ma da errore perchè manca una parte nel connectDB
 			return corsi;
 
 		} catch (SQLException e) {
-			// e.printStackTrace();
 			throw new RuntimeException("Errore Db");
 		}
 	}
 
-	/*
+	/**
 	 * Dato un codice insegnamento, ottengo il corso
+	 * return corso cercato
 	 */
-	public void getCorso(Corso corso) {
+	public Corso getCorso(String codiceInsegnamento) {		//era Corso corso e void
 		// TODO
+		for(Corso c: this.getTuttiICorsi()) {
+			if(codiceInsegnamento.equals(c.getCodins())) {
+				return c;
+			}
+		}
+		return null;
+		
 	}
 
-	/*
+	/**
 	 * Ottengo tutti gli studenti iscritti al Corso
+	 * return lista della classe {@link Studente}
 	 */
-	public void getStudentiIscrittiAlCorso(Corso corso) {
-		// TODO
+	public List<Studente> getStudentiIscrittiAlCorso(Corso corso) {		//era void
+		
+				listaStudentiIscritti.clear();
+				List<Studente> listaStudentiIscritti=new LinkedList<Studente>();
+
+				final String sql = "SELECT matricola FROM iscrizione "+
+						"WHERE codins=?";
+
+		try {
+			
+			Connection conn = ConnectDB.getConnection();
+			
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, corso.getCodins());		//setto il primo ? al codice del corso passato come parametro
+			ResultSet rs = st.executeQuery();
+
+			while (rs.next()) {
+				int matricola = rs.getInt("matricola");
+				Studente s=model.cercaStudente(matricola);
+				listaStudentiIscritti.add(s);
+			}
+			
+			//conn.close(); andrebbe messo ma da errore perchè manca una parte nel connectDB
+			return listaStudentiIscritti;
+			
+			
+		} catch (SQLException e) {
+			throw new RuntimeException("Errore Db");
+		}
+ 
+		
 	}
 
 	/*
 	 * Data una matricola ed il codice insegnamento, iscrivi lo studente al corso.
 	 */
 	public boolean inscriviStudenteACorso(Studente studente, Corso corso) {
-		// TODO
 		// ritorna true se l'iscrizione e' avvenuta con successo
 		return false;
 	}
+	
+	
+	
+	
+	
 }

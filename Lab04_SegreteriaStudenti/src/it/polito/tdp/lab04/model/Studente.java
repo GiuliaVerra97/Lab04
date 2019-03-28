@@ -6,7 +6,7 @@ public class Studente {
 	private int matricola;
 	private String nome;
 	private String cognome;
-	private String cds;
+	private String cds;		//codice insegnamento
 	
 	public Studente(int matricola, String nome, String cognome, String cds) {
 		super();

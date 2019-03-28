@@ -12,7 +12,7 @@ public class ConnectDB {
 	public static Connection getConnection() {
 
 		try {
-			if (connection == null || connection.isClosed()) {
+			if (connection == null /*|| connection.isClosed()*/) {			//devo avviare la connessione e quindi verificare che non sia chiusa, ma non la metto in questo caso perchè da errore 
 				connection = DriverManager.getConnection(jdbcUrl);
 			}
 			return connection;
