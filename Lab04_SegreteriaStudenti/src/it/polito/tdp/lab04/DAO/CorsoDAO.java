@@ -15,7 +15,7 @@ public class CorsoDAO {
 	
 	private List<Studente> listaStudentiIscritti=new LinkedList<Studente>();
 	private Model model=new Model();
- 	StudenteDAO stud = new StudenteDAO();
+ 	private List<Corso> listaCorsiFrequentati=new LinkedList<Corso>();
  	
  	
 	/**
@@ -77,7 +77,6 @@ public class CorsoDAO {
 	public List<Studente> getStudentiIscrittiAlCorso(Corso corso) {		//era void
 		
 				listaStudentiIscritti.clear();
-				List<Studente> listaStudentiIscritti=new LinkedList<Studente>();
 
 				final String sql = "SELECT matricola FROM iscrizione "+
 						"WHERE codins=?";
@@ -107,13 +106,53 @@ public class CorsoDAO {
 		
 	}
 
-	/*
-	 * Data una matricola ed il codice insegnamento, iscrivi lo studente al corso.
+	/**
+	 * Dato lo studente e l'insegnamento iscrive lo studente al corso.
+	 * @param studente 
+	 * @param corso
+	 * @return true se lo studente è stato inserito correttamente al corso, false se era gia iscritto a quel corso
 	 */
-	public boolean inscriviStudenteACorso(Studente studente, Corso corso) {
-		// ritorna true se l'iscrizione e' avvenuta con successo
-		return false;
+	public void inscriviStudenteACorso(Studente studente, Corso corso) {			//era boolean
+	
 	}
+	
+	
+	
+	
+
+	public List<Corso> corsiFrequentati(Studente s) {
+	
+		listaCorsiFrequentati.clear();
+
+
+		final String sql = "SELECT codins FROM iscrizione "+
+				"WHERE matricola=?";
+
+		try {
+	
+			Connection conn = ConnectDB.getConnection();
+	
+			PreparedStatement st = conn.prepareStatement(sql);
+		st.setInt(1, s.getMatricola());		//setto il primo ? al codice del corso passato come parametro
+		ResultSet rs = st.executeQuery();
+
+		while (rs.next()) {
+			String codiceInsegnamento = rs.getString("codins");
+			Corso c=this.getCorso(codiceInsegnamento);
+			listaCorsiFrequentati.add(c);
+		}
+	
+		//conn.close(); andrebbe messo ma da errore perchè manca una parte nel connectDB
+		return listaCorsiFrequentati;
+	
+	
+		} catch (SQLException e) {
+			throw new RuntimeException("Errore Db");
+		}
+		
+		
+	}
+
 	
 	
 	

@@ -4,13 +4,8 @@ import java.util.List;
 
 import it.polito.tdp.lab04.DAO.CorsoDAO;
 import it.polito.tdp.lab04.DAO.StudenteDAO;
-import it.polito.tdp.lab04.controller.SegreteriaStudentiController;
 
 public class Model {
-	
-	
-	private Corso c;
-	
 
 	public Model() {
 		super();
@@ -60,6 +55,23 @@ public class Model {
 			return null;
 		}
 		return null;
+	}
+
+
+	public List<Corso> corsiFrequentati(Studente s) {
+		CorsoDAO c=new CorsoDAO();
+		return c.corsiFrequentati(s) ;
+	}
+
+
+	public boolean isIscritto(Studente s, String nomeCorso) {
+		CorsoDAO corso=new CorsoDAO();
+		Corso c=this.verificaCorsoMenuTendina(nomeCorso);
+		List<Corso> listaCorsi=corso.corsiFrequentati(s);
+		if(listaCorsi.contains(c)) {
+			return true;
+		}
+		return false;
 	}
 	
 	

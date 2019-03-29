@@ -5,14 +5,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import it.polito.tdp.lab04.DAO.CorsoDAO;
 import it.polito.tdp.lab04.model.Corso;
 import it.polito.tdp.lab04.model.Model;
 import it.polito.tdp.lab04.model.Studente;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -58,7 +56,31 @@ public class SegreteriaStudentiController {
     private Model model;
 
     @FXML
-    void doCercaCorsi(ActionEvent event) {    	
+    void doCercaCorsi(ActionEvent event) {    
+    	txtArea.clear();
+    	txtNome.clear();
+    	txtcognome.clear();
+    	int matricola;
+    	try {
+    		matricola=Integer.parseInt(txtMatricola.getText());
+    	}catch(NumberFormatException e) {
+    		txtArea.appendText("Come numero di matricola bisogna scrivere un intero\n");
+    		return;
+    	}
+		Studente s=model.cercaStudente(matricola);
+    	if(s==null) {
+    			txtArea.appendText("Matricola non esistente\n");
+    			return;
+    	}
+    	List<Corso> listaCorsi=model.corsiFrequentati(s);
+    	if(listaCorsi!=null) {
+    	for(Corso c: listaCorsi) {
+    		String stringa=c.getCodins()+" "+c.getNomeCorso()+" "+c.getCrediti()+" "+c.getPd();
+    		txtArea.appendText(stringa+"\n");
+    	}
+    	}else {
+    		txtArea.appendText("La matricola cercata non segue nessun corso\n");
+    	}
     }
 
     @FXML
@@ -75,7 +97,7 @@ public class SegreteriaStudentiController {
     			}
     		}
     	}else{
-    		txtArea.appendText("Errore nella selezione del corso");
+    		txtArea.appendText("Errore nella selezione del corso\n");
     	}
     }
 
@@ -107,19 +129,51 @@ public class SegreteriaStudentiController {
     	
     }
 
+    
+    @FXML
+    void doCercaSeIscritto(ActionEvent event) {
+    	txtArea.clear();
+    	if(menuTendinaCorso.getValue()==null) {
+    		txtArea.appendText("Errore: corso non selezionato\n");
+    		return;
+    	}
+    	int matricola;
+    	try {
+       	 matricola= Integer.parseInt(txtMatricola.getText());
+       	}catch(NumberFormatException e) {
+       		txtArea.appendText("Come numero di matricola bisogna scrivere un intero");
+       		return;
+       	}
+    	Studente s=model.cercaStudente(matricola);
+    	if(s==null) {
+    		txtArea.appendText("Studente non trovato");
+    	}
+    	boolean iscritto=model.isIscritto(s, menuTendinaCorso.getValue());
+    	if(iscritto==true) {
+    		txtArea.appendText("Lo studente è iscritto al corso");
+    	}else {
+    		txtArea.appendText("Lo studente NON è iscritto al corso");
+    	}
+    	
+    	
+    	
+    }
+    
+    
     @FXML
     void doIscrivi(ActionEvent event) {
-
     }
 
-    @FXML
-    void doMenuScegliCorsi(ActionEvent event) {
-    	this.setMenuTendinaCorso(this.menuTendinaCorso);
-    }
-
+    
+    
+    
+    
     @FXML
     void doReset(ActionEvent event) {
-
+    	txtArea.clear();
+    	txtNome.clear();
+    	txtcognome.clear();
+    	txtMatricola.clear();
     }
 
     @FXML
