@@ -162,6 +162,28 @@ public class SegreteriaStudentiController {
     
     @FXML
     void doIscrivi(ActionEvent event) {
+    	txtArea.clear();
+    	if(menuTendinaCorso.getValue()==null) {
+    		txtArea.appendText("Errore: corso non selezionato\n");
+    		return;
+    	}
+    	int matricola;
+    	try {
+       	 matricola= Integer.parseInt(txtMatricola.getText());
+       	}catch(NumberFormatException e) {
+       		txtArea.appendText("Come numero di matricola bisogna scrivere un intero");
+       		return;
+       	}
+    	Studente s=model.cercaStudente(matricola);
+    	if(s==null) {
+    		txtArea.appendText("Studente non trovato");
+    	}
+    	boolean iscritto=model.iscrivi(s, menuTendinaCorso.getValue());
+    	if(iscritto==true) {
+    		txtArea.appendText("Lo studente è stato iscritto al corso");
+    	}else {
+    		txtArea.appendText("Lo studente è già iscritto al corso");
+    	}
     }
 
     

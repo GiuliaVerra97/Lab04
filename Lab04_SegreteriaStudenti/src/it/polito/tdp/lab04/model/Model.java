@@ -73,6 +73,14 @@ public class Model {
 		}
 		return false;
 	}
+
+
+	public boolean iscrivi(Studente s, String nomeCorso) {
+		CorsoDAO corso=new CorsoDAO();
+		Corso c=this.verificaCorsoMenuTendina(nomeCorso);
+		boolean result=corso.inscriviStudenteACorso(s, c);
+		return result;
+	}
 	
 	
 }

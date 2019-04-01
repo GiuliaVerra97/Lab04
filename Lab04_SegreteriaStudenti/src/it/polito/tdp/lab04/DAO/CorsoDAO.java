@@ -1,6 +1,7 @@
 package it.polito.tdp.lab04.DAO;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -50,6 +51,7 @@ public class CorsoDAO {
 			//conn.close(); andrebbe messo ma da errore perchè manca una parte nel connectDB
 			return corsi;
 
+			
 		} catch (SQLException e) {
 			throw new RuntimeException("Errore Db");
 		}
@@ -112,8 +114,34 @@ public class CorsoDAO {
 	 * @param corso
 	 * @return true se lo studente è stato inserito correttamente al corso, false se era gia iscritto a quel corso
 	 */
-	public void inscriviStudenteACorso(Studente studente, Corso corso) {			//era boolean
-	
+	public boolean inscriviStudenteACorso(Studente studente, Corso corso) {			//era boolean
+				
+		
+		String sql="INSERT INTO iscrizione(matricola, codins) "+
+				"VALUE (?, ?)";
+		
+		try {
+			Connection conn=ConnectDB.getConnection();
+			
+			PreparedStatement st=conn.prepareStatement(sql);
+			st.setInt(1, studente.getMatricola());
+			st.setString(2, corso.getCodins());			
+			int rs=st.executeUpdate();		//quando inserisco dati nel DB per eseguire il programma devo usare executeUpdate()
+			
+			if(rs!=0) {
+				return true;
+			}
+		
+			//conn.close();
+			
+		}catch(SQLException e) {
+			//throw new RuntimeException("Errore Db");
+			return false;
+		}
+		
+		
+		return false;
+		
 	}
 	
 	
@@ -142,7 +170,7 @@ public class CorsoDAO {
 			listaCorsiFrequentati.add(c);
 		}
 	
-		//conn.close(); andrebbe messo ma da errore perchè manca una parte nel connectDB
+		//conn.close();	andrebbe messo ma da errore perchè manca una parte nel connectDB
 		return listaCorsiFrequentati;
 	
 	
